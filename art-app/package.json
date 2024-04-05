@@ -1,0 +1,25 @@
+{
+  "name": "art-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "@pmndrs/vanilla": "^1.15.1",
+    "@react-three/fiber": "^8.16.1",
+    "@types/three": "^0.163.0",
+    "gsap": "^3.12.5",
+    "lamina": "^1.1.23",
+    "react": "^18.2.0",
+    "smooth-scrollbar": "^8.8.4",
+    "three": "^0.163.0",
+    "three.meshline": "^1.4.0"
+  }
+}
