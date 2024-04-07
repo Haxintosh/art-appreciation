@@ -423,6 +423,37 @@ subGaleryHeader.mesh.position.set(-10, 6, -200);
 subGaleryHeader.mesh.rotation.y = degToRad(-10);
 scene.add(subGaleryHeader.mesh);
 
+let subGaleryText = Text({
+  text: "Comme vous pouvez constater, Fernand Pelez fait souvent des art sur des scènes misérables.",
+  fontSize: 3,
+  color: 0xFFFFFF,
+  maxWidth: 40,
+  lineHeight: 1,
+  letterSpacing: 0.1,
+  textAlign: 'center',
+  anchorX: 'left',
+  anchorY: 'middle',
+  font: './fonts/mplusBOLD.ttf',
+});
+
+let subSubGaleryText = Text({
+  text: "Et bien, ses arts ont pour but de critiquer et de denoncer les injustices  ",
+  fontSize: 3,
+  color: 0xFFFFFF,
+  maxWidth: 40,
+  lineHeight: 1,
+  letterSpacing: 0.1,
+  textAlign: 'center',
+  anchorX: 'left',
+  anchorY: 'middle',
+  font: './fonts/mplusBOLD.ttf',
+});
+
+subGaleryText.mesh.position.set(17, 8, -280);
+subGaleryText.mesh.rotation.y = degToRad(-35);
+subSubGaleryText.mesh.position.set(25, 5, -330);
+scene.add(subGaleryText.mesh, subSubGaleryText.mesh);
+
 if (debug){
   controls.addEventListener( "change", () => {  
       console.log( "POS", controls.object.position ); 
@@ -433,7 +464,6 @@ if (debug){
   });
 }
 
-// Update visuals on resize
 addEventListener("resize", ()=>{
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
