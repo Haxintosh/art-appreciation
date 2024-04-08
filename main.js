@@ -527,7 +527,7 @@ let subGaleryText = Text({
 });
 
 let subSubGaleryText = Text({
-  text: "Et bien, ses arts ont faisaient partis d'un mouvement artistique qui traite des sujets sociaux (peintures socialistes).",
+  text: "Et bien, ses arts ont faisaient partis d'un mouvement artistique qui traite des sujets sociaux (peintures sociales).",
   fontSize: 3,
   color: 0xFFFFFF,
   maxWidth: 45,
