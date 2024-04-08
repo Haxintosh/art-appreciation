@@ -383,7 +383,6 @@ const welcomeTextSCROLL= Text({
 welcomeTextSCROLL.mesh.position.set(0, 10, -20);
 scene.add(welcomeTextSCROLL.mesh);
 
-
 let mainPaintingGeo = new THREE.PlaneGeometry(4.61*4, 5.57*4);
 let mainPaintingTexture = new THREE.TextureLoader().load('textures/GDR-MAIN.jpg');
 const mainPaintingMat = new THREE.MeshBasicMaterial({map: mainPaintingTexture});
