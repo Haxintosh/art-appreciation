@@ -831,7 +831,7 @@ gratitudeText.mesh.rotation.y = degToRad(-55);
 scene.add(gratitudeText.mesh);
 
 let subGratitudeText = Text({
-    text: 'J\'ai grandi dans un environnement où la crainte de la faim ou du manque d\'argent et jamais je n\'ai connu une situation semblable à celle du garçon sans-abri, solitaire dans les rues, fumant sa cigarette.',
+    text: 'J\'ai grandi dans un environnement où la crainte de la faim ou du manque d\'argent n\'était jamais une situation qui s\'est passée pour ma famille.',
     fontSize: 2,
     color: 0xFFFFFF,
     maxWidth: 45,
