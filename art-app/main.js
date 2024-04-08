@@ -31,9 +31,10 @@ scene.add(mainContainer);
 let sadCTrans = false;
 let angCTrans = false;
 let gratitudeCTrans = false;
+let originalCTrans = false;
 // fog
 let fogColor = 0x8AC7DB
-scene.fog = new THREE.Fog(fogColor, 100, 200); // 10
+scene.fog = new THREE.Fog(fogColor, 10, 200); // 10
 let rgbHex = hexToRgb(fogColor);
 let targetRGB = hexToRgb(0x3B3B3B);
 let fogTween = new TWEEN.Tween({r:rgbHex.r, g:rgbHex.g, b:rgbHex.b})
@@ -75,6 +76,19 @@ let gratitudeTween = new TWEEN.Tween({r:targetAngerColor.r, g:targetAngerColor.g
         gratitudeCTrans = true;
     });
 
+let targetOriginalColor = hexToRgb(fogColor);
+let originalTween = new TWEEN.Tween({r:targetGratitudeColor.r, g:targetGratitudeColor.g, b:targetGratitudeColor.b})
+    .to({r:targetOriginalColor.r, g:targetOriginalColor.g, b:targetOriginalColor.b}, 2000)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+    .onUpdate((color)=>{
+        scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 10, 100); //
+        originalCTrans = true;
+        // console.log(scene.fog.color)
+    })
+    .onStart(()=>{
+        console.log("Fog started - TWEEN");
+        originalCTrans = true;
+    });
 if (!debug) {
   mainContainer.add(camera);
 }
@@ -103,21 +117,6 @@ let cloud;
 let arrow;
 
 const loader = new GLTFLoader();
-// loader.load(
-//   'models/cloud.glb',
-//   (gltf) => {
-//     cloud = gltf.scene;
-//     scene.add(cloud);
-//     cloud.scale.set(0.1, 0.1, 0.1);
-//     cloud.position.set(0, 0, 0);
-//   }, 
-//   (xhr) => {
-//     console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-//   },
-//   (e) => {
-//     console.error('An error happened', e);
-//   }
-// );
 
 loader.load(
   'models/arrowV4.glb',
@@ -150,6 +149,9 @@ const points = [
     new THREE.Vector3(50, 0, -8*curveDist),
     new THREE.Vector3(0, 0, -9*curveDist),
     new THREE.Vector3(0, 0, -10*curveDist),
+    new THREE.Vector3(20, 0, -11*curveDist),
+    new THREE.Vector3(0, 0, -12*curveDist),
+    new THREE.Vector3(-30, 0, -13*curveDist),
 
 ];
 
@@ -672,7 +674,7 @@ angerSubText.mesh.rotation.y = degToRad(50);
 scene.add(angerSubText.mesh);
 
 let angerSubSubText = Text({
-    text: 'L\'innocence de l\'enfant, éclipsée par la dure réalité de notre monde démontré par l\'arrière plan de l\'œuvre, m\'a bouleversé.',
+    text: 'L\'innocence de l\'enfant, contrasté par la dure réalité de notre monde démontré par l\'arrière plan de l\'œuvre, m\'a bouleversé.',
     fontSize: 2,
     color: 0xFFFFFF,
     maxWidth: 45,
@@ -824,6 +826,311 @@ finalGratitudeText.mesh.position.set(105, 6, -1470);
 finalGratitudeText.mesh.rotation.y = degToRad(15);
 scene.add(finalGratitudeText.mesh);
 
+let appreciationHeader = Text({
+    text: "Appréciation",
+    fontSize: 4,
+    color: 0xFFFFFF,
+    maxWidth: 20,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusBOLD.ttf',
+  });
+
+appreciationHeader.mesh.position.set(83, 4, -1522);
+appreciationHeader.mesh.rotation.y = degToRad(20);
+scene.add(appreciationHeader.mesh);
+
+let compositionHeader = Text({
+    text: "Composition",
+    fontSize: 3,
+    color: 0xFFFFFF,
+    maxWidth: 20,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusBOLD.ttf',
+  });
+
+compositionHeader.mesh.position.set(62, 4, -1564);
+compositionHeader.mesh.rotation.y = degToRad(25);
+scene.add(compositionHeader.mesh);
+
+let compositionText = Text({
+    text: 'La simplicité de la composition de l\'œuvre, ainsi que l\'angle de vue simple, mettent en valeur le garçon.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+compositionText.mesh.position.set(48, 6, -1606);
+compositionText.mesh.rotation.y = degToRad(20);
+scene.add(compositionText.mesh);
+
+let compositionSubText = Text({
+    text: 'Cette simplicité permet au spectateur de se concentrer sur l\'enfant et de renforcer l\'effet émotionnel ainsi que le message de l\'œuvre.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+compositionSubText.mesh.position.set(36.6, 6, -1648.8);
+compositionSubText.mesh.rotation.y = degToRad(15);
+scene.add(compositionSubText.mesh);
+
+let compositionFinalText = Text({
+    text: 'Donc, pour moi, l\'auteur utilise de façon efficace la composition pour transmettre son message.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+compositionFinalText.mesh.position.set(21.42, 6, -1701.6);
+compositionFinalText.mesh.rotation.y = degToRad(15);
+scene.add(compositionFinalText.mesh);
+
+let colorHeader = Text({
+    text: "Couleur",
+    fontSize: 3,
+    color: 0xFFFFFF,
+    maxWidth: 20,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusBOLD.ttf',
+  });
+
+colorHeader.mesh.position.set(5.78, 4, -1765);
+colorHeader.mesh.rotation.y = degToRad(15);
+scene.add(colorHeader.mesh);
+
+let colorText = Text({
+    text: 'La palette de couleurs de l\'œuvre est monotone et sourde, et elle est dominée par des teintes telles que le brun et le gris.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+colorText.mesh.position.set(-0.8, 6, -1807.2);
+colorText.mesh.rotation.y = degToRad(7);
+scene.add(colorText.mesh);
+
+let colorSubText = Text({
+    text: 'Ces nuances évoquent la morosité et la dureté de la vie dans les rues, ainsi que la pauvreté, car elles se confondent avec les couleurs de la terre.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+colorSubText.mesh.position.set(-3.5, 6, -1849.43);
+colorSubText.mesh.rotation.y = degToRad(0);
+scene.add(colorSubText.mesh);
+
+let colorEmoText = Text({
+  text: 'Cette palette sombre contribue à renforcer l\'atmosphère précaire et souligne la misère de la pauvreté',
+  fontSize: 2,
+  color: 0xFFFFFF,
+  maxWidth: 45,
+  lineHeight: 1,
+  letterSpacing: 0.1,
+  textAlign: 'center',
+  anchorX: 'center',
+  anchorY: 'middle',
+  font: './fonts/mplusREGULAR.ttf',
+});
+
+colorEmoText.mesh.position.set(-3, 6, -1902);
+colorEmoText.mesh.rotation.y = degToRad(-5);
+scene.add(colorEmoText.mesh);
+
+let colorFinalText = Text({
+    text: 'Aussi, le contraste de couleur des vêtements et la peau du personnage principal le fait ressortir davantage, attirant le regard et ajoutant une dimension supplémentaire à la composition.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+colorFinalText.mesh.position.set(-2.51, 7, -1951.23);
+colorFinalText.mesh.rotation.y = degToRad(-8);
+scene.add(colorFinalText.mesh);
+
+let realismHeader = Text({
+    text: "Réalisme",
+    fontSize: 3,
+    color: 0xFFFFFF,
+    maxWidth: 20,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusBOLD.ttf',
+  });
+
+realismHeader.mesh.position.set(1.36, 4, -2019.875);
+realismHeader.mesh.rotation.y = degToRad(-7);
+scene.add(realismHeader.mesh);
+
+let realismText = Text({
+    text: 'Malgré la composition simple, Pelez parvient à capturer les détails de manière extraordinaire. Les textures rugueuses de ses vêtements et de l\'arrière-plan, constitué du mur et de la terre, sont reproduites avec une précision remarquable. ',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+realismText.mesh.position.set(11.56, 8, -2102.243);
+realismText.mesh.rotation.y = degToRad(-7);
+scene.add(realismText.mesh);
+
+let realismSubText = Text({
+    text: 'Cela donne vie à l\'authenticité de la pauvreté et de la souffrance vécues par les personnes dans des situations similaires. ',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+realismSubText.mesh.position.set(19.29, 6, -2175.26);
+realismSubText.mesh.rotation.y = degToRad(-8);
+scene.add(realismSubText.mesh);
+
+let socialCritiqueHeader = Text({
+    text: "Commentaire sociale",
+    fontSize: 3,
+    color: 0xFFFFFF,
+    maxWidth: 20,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusBOLD.ttf',
+});
+
+socialCritiqueHeader.mesh.position.set(19.25, 4, -2230.18);
+socialCritiqueHeader.mesh.rotation.y = degToRad(-4);
+scene.add(socialCritiqueHeader.mesh);
+
+let socialCritiqueText = Text({
+    text: 'L\'œuvre de Pelez est un aussi un commentaire social sur la pauvreté et la misère des enfants des rues. ',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+socialCritiqueText.mesh.position.set(14.82, 6, -2285.09);
+socialCritiqueText.mesh.rotation.y = degToRad(7);
+scene.add(socialCritiqueText.mesh);
+
+let socialCritiqueSubText = Text({
+    text: 'Elle critique la société de la Belle Époque, où le nombre d\'enfants itinérants a atteint un niveau significatif en raison de l\'industrialisation et de l\'urbanisation.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+socialCritiqueSubText.mesh.position.set(6.13, 6, -2353.73);
+socialCritiqueSubText.mesh.rotation.y = degToRad(10);
+scene.add(socialCritiqueSubText.mesh);
+
+let socialCritiqueSubSubText = Text({
+    text: 'Les enfants sous 18 ans n\'avaient pas le droit de travailler, donc plusieurs enfants, comme celui dans l\'art, ont été laissés à eux-mêmes. ', // Elle souligne les conditions de vie difficiles des enfants des rues et la nécessité d'une réforme sociale pour améliorer leur sort.
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+socialCritiqueSubSubText.mesh.position.set(-1.1, 6, -2408.64);
+socialCritiqueSubSubText.mesh.rotation.y = degToRad(11);
+scene.add(socialCritiqueSubSubText.mesh);
+
+let socialCritiqueFinalText = Text({
+    text: 'Cette œuvre est un appel à l\'action pour la réforme sociale et l\'amélioration des conditions de vie des enfants des rues.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+socialCritiqueFinalText.mesh.position.set(-8.8, 6, -2463.55);
+socialCritiqueFinalText.mesh.rotation.y = degToRad(15);
+scene.add(socialCritiqueFinalText.mesh);
 
 if (debug){
   controls.addEventListener( "change", () => {  
