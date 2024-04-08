@@ -29,13 +29,15 @@ if (debug){
 
 scene.add(mainContainer);
 let sadCTrans = false;
+let angCTrans = false;
+let gratitudeCTrans = false;
 // fog
 let fogColor = 0x8AC7DB
-scene.fog = new THREE.Fog(fogColor, 10, 100);
+scene.fog = new THREE.Fog(fogColor, 100, 200); // 10
 let rgbHex = hexToRgb(fogColor);
-let targetRGB = hexToRgb(0xD3D3D3);
+let targetRGB = hexToRgb(0x3B3B3B);
 let fogTween = new TWEEN.Tween({r:rgbHex.r, g:rgbHex.g, b:rgbHex.b})
-    .to({r:targetRGB.r, g:targetRGB.g, b:targetRGB.b}, 1000)
+    .to({r:targetRGB.r, g:targetRGB.g, b:targetRGB.b}, 2000)
     .easing(TWEEN.Easing.Quadratic.InOut)
     .onUpdate((color)=>{
       scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 10, 100); //
@@ -46,6 +48,33 @@ let fogTween = new TWEEN.Tween({r:rgbHex.r, g:rgbHex.g, b:rgbHex.b})
       sadCTrans = true;
       console.log("Fog started - TWEEN");
     });
+let targetAngerColor = hexToRgb(0x8B0000);
+let angerTween = new TWEEN.Tween({r:targetRGB.r, g:targetRGB.g, b:targetRGB.b})
+    .to({r:targetAngerColor.r, g:targetAngerColor.g, b:targetAngerColor.b}, 2000)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+    .onUpdate((color)=>{
+        scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 10, 100); //
+        // console.log(scene.fog.color)
+         angCTrans = true;
+    })
+    .onStart(()=>{
+        console.log("Fog started - TWEEN");
+        angCTrans = true;
+    });
+
+let targetGratitudeColor = hexToRgb(0xFFD300);
+let gratitudeTween = new TWEEN.Tween({r:targetAngerColor.r, g:targetAngerColor.g, b:targetAngerColor.b})
+    .to({r:targetGratitudeColor.r, g:targetGratitudeColor.g, b:targetGratitudeColor.b}, 2000)
+    .easing(TWEEN.Easing.Quadratic.InOut)
+    .onUpdate((color)=>{
+        scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 10, 100); //
+        // console.log(scene.fog.color) CAUSES MEM LEAK!!!!!!!!!!!!!!!!!!!!!
+    })
+    .onStart(()=>{
+        console.log("Fog started - TWEEN");
+        gratitudeCTrans = true;
+    });
+
 if (!debug) {
   mainContainer.add(camera);
 }
@@ -107,7 +136,7 @@ loader.load(
   }
 );
 // Create spline curve
-const splineNbPoints = 1000
+const splineNbPoints = 5000
 const curveDist = 200;
 const points = [
   new THREE.Vector3(0, 0, 0),
@@ -118,6 +147,10 @@ const points = [
   new THREE.Vector3(-300, 0, -5*curveDist),
   new THREE.Vector3(-150, 0, -6*curveDist),
   new THREE.Vector3(100, 0, -7*curveDist),
+    new THREE.Vector3(50, 0, -8*curveDist),
+    new THREE.Vector3(0, 0, -9*curveDist),
+    new THREE.Vector3(0, 0, -10*curveDist),
+
 ];
 
 const spline = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.5);
@@ -195,10 +228,18 @@ const animate = function () {
   if (debug){
     controls.update();
   }
-  if (scrollPos >= 0.36 && !sadCTrans){
+  if (scrollPos >= 0.25 && !sadCTrans){
     console.log("Fog started");
     fogTween.start();
     sadCTrans = true;
+  }
+  if (scrollPos >= 0.363 && !angCTrans){
+    angerTween.start();
+    angCTrans = true;
+  }
+  if (scrollPos >= 0.6 && !gratitudeCTrans){
+    gratitudeTween.start();
+    gratitudeCTrans = true;
   }
   renderer.render(scene, camera);
   TWEEN.update();
@@ -213,6 +254,7 @@ function updateCameraPosition(delta){
 
   const paramDamp = 5;
   const curPoint = spline.getPoint(scrollPos);
+  console.log("CURPOINT", curPoint);
   mainContainer.position.lerp(curPoint, (delta/1000)*paramDamp);
 
   const lookAtPoint = spline.getPoint(
@@ -531,7 +573,7 @@ sadnessText.mesh.rotation.y = degToRad(33);
 scene.add(sadnessText.mesh);
 
 let extraSadnessText = Text({
-  text: 'De plus, sa condition négligée dans un environnement désolé et sale ainsi que le geste résigné de l\'enfant, en train de fumer des cigarettes, intensifient mes émotions. ',
+  text: 'De plus, sa condition négligée dans un environnement désolé et sale ainsi que le geste résigné de l\'enfant, en train de fumer des cigarettes, intensifient mes émotions. Aussi, le fait qu\'il y a des milliers d\'enfants dans le monde qui vivent dans des conditions similaires me rend encore plus triste.',
   fontSize: 2,
   color: 0xFFFFFF,
   maxWidth: 45,
@@ -543,7 +585,7 @@ let extraSadnessText = Text({
   font: './fonts/mplusREGULAR.ttf',
 });
 
-extraSadnessText.mesh.position.set(-35, 6.5, -620);
+extraSadnessText.mesh.position.set(-35, 9, -620);
 extraSadnessText.mesh.rotation.y = degToRad(25);
 scene.add(extraSadnessText.mesh);
 
@@ -562,6 +604,226 @@ let rememberanceText = Text({
 rememberanceText.mesh.position.set(-62, 7, -680);
 rememberanceText.mesh.rotation.y = degToRad(23);
 scene.add(rememberanceText.mesh);
+
+let angerHeader = Text({
+    text: "Colère",
+    fontSize: 3,
+    color: 0xFFFFFF,
+    maxWidth: 20,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'left',
+    anchorY: 'middle',
+    font: './fonts/mplusBOLD.ttf',
+});
+
+angerHeader.mesh.position.set(-68, 4, -740);
+angerHeader.mesh.rotation.y = degToRad(33);
+scene.add(angerHeader.mesh);
+
+let angerText = Text({
+    text: 'Ensuite, après avoir ressenti la tristesse, la vue de l\'œuvre a aussi suscité en moi une colère profonde et une frustration croissante',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'left',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+angerText.mesh.position.set(-114, 6, -780);
+angerText.mesh.rotation.y = degToRad(33);
+scene.add(angerText.mesh);
+
+let angerQuestion = Text({
+    text: 'Comment avons-nous permis en tant qu\'êtres humains que de telles injustices et une telle pauvreté continuent d\'exister?',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'left',
+    anchorY: 'middle',
+    font: './fonts/mplusBOLD.ttf',
+});
+angerQuestion.mesh.position.set(-160, 6, -830);
+angerQuestion.mesh.rotation.y = degToRad(46);
+scene.add(angerQuestion.mesh);
+
+let angerSubText = Text({
+    text: 'Ma colère est dirigée non seulement contre les conditions de vie de l\'enfant, mais aussi contre la société qui a permis qu\'il se retrouve dans une telle situation.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'left',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+angerSubText.mesh.position.set(-227, 5, -880);
+angerSubText.mesh.rotation.y = degToRad(50);
+scene.add(angerSubText.mesh);
+
+let angerSubSubText = Text({
+    text: 'L\'innocence de l\'enfant, éclipsée par la dure réalité de notre monde démontré par l\'arrière plan de l\'œuvre, m\'a bouleversé.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'left',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+angerSubSubText.mesh.position.set(-283, 5, -930);
+angerSubSubText.mesh.rotation.y = degToRad(46);
+scene.add(angerSubSubText.mesh);
+
+let frustrationText = Text({
+    text: 'Savoir que, en tant qu\'élève, je suis largement impuissant à lui venir en aide ne fait qu\'accroître ma frustration et ma colère.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'left',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+frustrationText.mesh.position.set(-322, 5, -990);
+frustrationText.mesh.rotation.y = degToRad(20);
+scene.add(frustrationText.mesh);
+
+let catalystText = Text({
+    text: 'Cependant, cette frustration et cette colère sont aussi un catalyseur pour moi, me poussant à sortir et à essayer, du mieux que je peux, de changer le monde dans lequel nous vivons.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'left',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+catalystText.mesh.position.set(-282, 6, -1100);
+catalystText.mesh.rotation.y = degToRad(-37);
+scene.add(catalystText.mesh);
+
+let finalAngerText = Text({
+    text: 'Cette œuvre m\'a invité à réfléchir et à entreprendre une introspection profonde sur notre société et sur ce que je peux faire pour contribuer à son amélioration.\n',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'left',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+finalAngerText.mesh.position.set(-230, 6, -1155);
+finalAngerText.mesh.rotation.y = degToRad(-48);
+scene.add(finalAngerText.mesh);
+
+let gratitudeHeader = Text({
+    text: "Gratitude",
+    fontSize: 3,
+    color: 0xFFFFFF,
+    maxWidth: 20,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'left',
+    anchorY: 'middle',
+    font: './fonts/mplusBOLD.ttf',
+});
+
+gratitudeHeader.mesh.position.set(-150, 4, -1212);
+gratitudeHeader.mesh.rotation.y = degToRad(-48);
+scene.add(gratitudeHeader.mesh);
+
+let gratitudeText = Text({
+    text: 'Après d\'avoir ressenti la tristesse et la colère, j\'ai ressenti une profonde gratitude envers l\'artiste pour avoir créé une œuvre aussi puissante et émouvante.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+gratitudeText.mesh.position.set(-105, 6, -1235);
+gratitudeText.mesh.rotation.y = degToRad(-55);
+scene.add(gratitudeText.mesh);
+
+let subGratitudeText = Text({
+    text: 'J\'ai grandi dans un environnement où la crainte de la faim ou du manque d\'argent et jamais je n\'ai connu une situation semblable à celle du garçon sans-abri, solitaire dans les rues, fumant sa cigarette.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+subGratitudeText.mesh.position.set(-60, 6, -1268);
+subGratitudeText.mesh.rotation.y = degToRad(-55);
+scene.add(subGratitudeText.mesh);
+
+let subSubGratitudeText = Text({
+    text: 'L\'œuvre m\'a rappelé la chance que j\'ai d\'avoir un toit sur ma tête, de la nourriture sur ma table et une famille aimante.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+subSubGratitudeText.mesh.position.set(33, 6, -1332);
+subSubGratitudeText.mesh.rotation.y = degToRad(-55);
+scene.add(subSubGratitudeText.mesh);
+
+let finalGratitudeText = Text({
+    text: 'Je suis reconnaissant pour tout ce que j\'ai et je suis inspiré à aider ceux qui n\'ont pas la même chance que moi.',
+    fontSize: 2,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+
+finalGratitudeText.mesh.position.set(105, 6, -1470);
+finalGratitudeText.mesh.rotation.y = degToRad(15);
+scene.add(finalGratitudeText.mesh);
+
 
 if (debug){
   controls.addEventListener( "change", () => {  
