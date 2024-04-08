@@ -34,14 +34,14 @@ let gratitudeCTrans = false;
 let originalCTrans = false;
 // fog
 let fogColor = 0x8AC7DB
-scene.fog = new THREE.Fog(fogColor, 10, 200); // 10
+scene.fog = new THREE.Fog(fogColor, 15, 200); // 10
 let rgbHex = hexToRgb(fogColor);
 let targetRGB = hexToRgb(0x3B3B3B);
 let fogTween = new TWEEN.Tween({r:rgbHex.r, g:rgbHex.g, b:rgbHex.b})
     .to({r:targetRGB.r, g:targetRGB.g, b:targetRGB.b}, 2000)
     .easing(TWEEN.Easing.Quadratic.InOut)
     .onUpdate((color)=>{
-      scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 10, 100); //
+      scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 15, 100); //
       // console.log(scene.fog.color)
       // sadCTrans = false;
     })
@@ -54,7 +54,7 @@ let angerTween = new TWEEN.Tween({r:targetRGB.r, g:targetRGB.g, b:targetRGB.b})
     .to({r:targetAngerColor.r, g:targetAngerColor.g, b:targetAngerColor.b}, 2000)
     .easing(TWEEN.Easing.Quadratic.InOut)
     .onUpdate((color)=>{
-        scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 10, 100); //
+        scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 15, 100); //
         // console.log(scene.fog.color)
          angCTrans = true;
     })
@@ -68,7 +68,7 @@ let gratitudeTween = new TWEEN.Tween({r:targetAngerColor.r, g:targetAngerColor.g
     .to({r:targetGratitudeColor.r, g:targetGratitudeColor.g, b:targetGratitudeColor.b}, 2000)
     .easing(TWEEN.Easing.Quadratic.InOut)
     .onUpdate((color)=>{
-        scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 10, 100); //
+        scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 15, 100); //
         // console.log(scene.fog.color) CAUSES MEM LEAK!!!!!!!!!!!!!!!!!!!!!
     })
     .onStart(()=>{
@@ -81,7 +81,7 @@ let originalTween = new TWEEN.Tween({r:targetGratitudeColor.r, g:targetGratitude
     .to({r:targetOriginalColor.r, g:targetOriginalColor.g, b:targetOriginalColor.b}, 2000)
     .easing(TWEEN.Easing.Quadratic.InOut)
     .onUpdate((color)=>{
-        scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 10, 100); //
+        scene.fog = new THREE.Fog(rgbToHex(Math.floor(color.r), Math.floor(color.g), Math.floor(color.b)), 15, 100); //
         originalCTrans = true;
         // console.log(scene.fog.color)
     })
@@ -111,9 +111,7 @@ let atmosphereMat = new LayerMaterial({
 let atmosphere = new THREE.Mesh(atmosphereGeo, atmosphereMat);
 scene.add(atmosphere);
 
-
-
-let cloud;
+let finalArt;
 let arrow;
 
 const loader = new GLTFLoader();
@@ -125,7 +123,7 @@ loader.load(
     mainContainer.add(arrow);
     arrow.scale.set(0.5, 0.5, 0.5);
     arrow.position.set(0, 1, 0);
-    init = true;
+    // init = true;
   },
   (xhr) => {
     console.log((xhr.loaded / xhr.total * 100) + '% loaded');
@@ -134,25 +132,50 @@ loader.load(
     console.error('An error happened', e);
   }
 );
+
+loader.load(
+    'models/SCFB3D.glb',
+    (gltf) => {
+      finalArt = gltf.scene;
+      scene.add(finalArt);
+      finalArt.scale.set(7, 7, 7);
+      finalArt.position.set(-31.27, 1, -2726.98);
+      init = true;
+    },
+    (xhr) => {
+      console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+    },
+    (e) => {
+      console.error('An error happened', e);
+    }
+)
+
+// let finalArtDirLight = new THREE.DirectionalLight(0xFFFFFF, 1);
+// finalArtDirLight.position.set(-31.72, 10, -2707.47);
+// scene.add(finalArtDirLight);
+let finalAmbientLight = new THREE.AmbientLight(0xFFFFFF, 0.1);
+scene.add(finalAmbientLight);
+
+
 // Create spline curve
 const splineNbPoints = 5000
 const curveDist = 200;
 const points = [
-  new THREE.Vector3(0, 0, 0),
-  new THREE.Vector3(0, 0, -curveDist),
-  new THREE.Vector3(100, 0, -2*curveDist),
-  new THREE.Vector3(0, 0, -3*curveDist),
-  new THREE.Vector3(-100, 0, -4*curveDist),
-  new THREE.Vector3(-300, 0, -5*curveDist),
-  new THREE.Vector3(-150, 0, -6*curveDist),
-  new THREE.Vector3(100, 0, -7*curveDist),
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(0, 0, -curveDist),
+    new THREE.Vector3(100, 0, -2*curveDist),
+    new THREE.Vector3(0, 0, -3*curveDist),
+    new THREE.Vector3(-100, 0, -4*curveDist),
+    new THREE.Vector3(-300, 0, -5*curveDist),
+    new THREE.Vector3(-150, 0, -6*curveDist),
+    new THREE.Vector3(100, 0, -7*curveDist),
     new THREE.Vector3(50, 0, -8*curveDist),
     new THREE.Vector3(0, 0, -9*curveDist),
     new THREE.Vector3(0, 0, -10*curveDist),
     new THREE.Vector3(20, 0, -11*curveDist),
     new THREE.Vector3(0, 0, -12*curveDist),
     new THREE.Vector3(-30, 0, -13*curveDist),
-
+    new THREE.Vector3(-30, 0, -14*curveDist),
 ];
 
 const spline = new THREE.CatmullRomCurve3(points, false, 'catmullrom', 0.5);
@@ -230,18 +253,31 @@ const animate = function () {
   if (debug){
     controls.update();
   }
-  if (scrollPos >= 0.25 && !sadCTrans){
+  if (scrollPos >= 0.179 && !sadCTrans){
     console.log("Fog started");
     fogTween.start();
     sadCTrans = true;
   }
-  if (scrollPos >= 0.363 && !angCTrans){
+  if (scrollPos >= 0.264 && !angCTrans){
     angerTween.start();
     angCTrans = true;
   }
-  if (scrollPos >= 0.6 && !gratitudeCTrans){
+  if (scrollPos >= 0.42768 && !gratitudeCTrans){
     gratitudeTween.start();
     gratitudeCTrans = true;
+  }
+  if (scrollPos >= 0.54 && !originalCTrans){
+    originalTween.start();
+    originalCTrans = true;
+  }
+
+  if (scrollPos >= 0.97) {
+    // controls = new OrbitControls(camera, renderer.domElement);
+    // // controls.enableDamping = true;
+    // // controls.dampingFactor = 0.25;
+    scene.fog = null;
+    // debug = true;
+    // mainContainer.remove(camera);
   }
   renderer.render(scene, camera);
   TWEEN.update();
@@ -271,10 +307,12 @@ function updateCameraPosition(delta){
   .subVectors(curPoint, lookAtPoint)
   .normalize();
 
-  const lookAt = currentLookAt.lerp(targetLookAt, (delta/1000)*paramDamp);
-  mainContainer.lookAt(
-    mainContainer.position.clone().add(lookAt)
-  );
+  if (!debug) {
+    const lookAt = currentLookAt.lerp(targetLookAt, (delta / 1000) * paramDamp);
+    mainContainer.lookAt(
+        mainContainer.position.clone().add(lookAt)
+    );
+  }
   
   // cursor rotation
   const tan = spline.getTangent(scrollPos + 0.02);
@@ -311,7 +349,9 @@ function updateCameraPosition(delta){
       arrow.rotation.y,
       angle
   ))
-  arrow.quaternion.slerp(targetArrowQuaternion, (delta/1000)*2);
+  if (!debug) {
+    arrow.quaternion.slerp(targetArrowQuaternion, (delta / 1000) * 2);
+  }
 }
 const welcomeText= Text({
   text: "Gamin des rues",
@@ -475,7 +515,7 @@ let subSubGaleryText = Text({
   text: "Et bien, ses arts ont faisaient partis d'un mouvement artistique qui traite des sujets sociaux (peintures socialistes).",
   fontSize: 3,
   color: 0xFFFFFF,
-  maxWidth: 40,
+  maxWidth: 45,
   lineHeight: 1,
   letterSpacing: 0.1,
   textAlign: 'center',
@@ -878,7 +918,7 @@ compositionText.mesh.rotation.y = degToRad(20);
 scene.add(compositionText.mesh);
 
 let compositionSubText = Text({
-    text: 'Cette simplicité permet au spectateur de se concentrer sur l\'enfant et de renforcer l\'effet émotionnel ainsi que le message de l\'œuvre.',
+    text: 'Cette simplicité permet aux gens de se concentrer sur l\'enfant et de renforcer l\'effet émotionnel ainsi que le message de l\'œuvre.',
     fontSize: 2,
     color: 0xFFFFFF,
     maxWidth: 45,
@@ -1132,6 +1172,53 @@ socialCritiqueFinalText.mesh.position.set(-8.8, 6, -2463.55);
 socialCritiqueFinalText.mesh.rotation.y = degToRad(15);
 scene.add(socialCritiqueFinalText.mesh);
 
+let proofText = Text({
+  text: 'Preuves',
+  fontSize: 4,
+  color: 0xFFFFFF,
+  maxWidth: 45,
+  lineHeight: 1,
+  letterSpacing: 0.1,
+  textAlign: 'center',
+  anchorX: 'center',
+  anchorY: 'middle',
+  font: './fonts/mplusBOLD.ttf',
+});
+
+proofText.mesh.position.set(-21.33, 4, -2530.066);
+proofText.mesh.rotation.y = degToRad(15);
+scene.add(proofText.mesh);
+
+let proofImageGeo = new THREE.PlaneGeometry(4.08*4, 3.072*4);
+let proofImageTexture = new THREE.TextureLoader().load('textures/proof.jpg');
+let proofImage = new THREE.Mesh(proofImageGeo, new THREE.MeshBasicMaterial({map:proofImageTexture}));
+proofImage.position.set(-45, 6, -2595);
+proofImage.rotation.y = degToRad(15);
+
+let proofImage2Geo = new THREE.PlaneGeometry(2.576*4.5, 1.932*4.5);
+let proofImage2Texture = new THREE.TextureLoader().load('textures/proof2.jpg');
+let proofImage2 = new THREE.Mesh(proofImage2Geo, new THREE.MeshBasicMaterial({map:proofImage2Texture}));
+proofImage2.position.set(-15, 6, -2595);
+proofImage2.rotation.y = degToRad(-15);
+
+let freeCamText = Text({
+    text: 'Caméra libre, utilisez la souris pour regarder autour de vous et défilez afin de vous déplacer.',
+    fontSize: 3,
+    color: 0xFFFFFF,
+    maxWidth: 45,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusBOLD.ttf',
+});
+
+freeCamText.mesh.position.set(-32.01, 6, -2644.50);
+freeCamText.mesh.rotation.y = degToRad(7);
+scene.add(freeCamText.mesh);
+
+scene.add(proofImage, proofImage2);
 if (debug){
   controls.addEventListener( "change", () => {  
       console.log( "POS", controls.object.position ); 
