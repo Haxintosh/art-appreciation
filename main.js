@@ -368,6 +368,22 @@ const welcomeText= Text({
 welcomeText.mesh.position.set(-10, 3.5, -20);
 scene.add(welcomeText.mesh);
 
+const welcomeTextSCROLL= Text({
+    text: "(Défilez)",
+    fontSize: 1,
+    color: 0xFFFFFF,
+    maxWidth: 20,
+    lineHeight: 1,
+    letterSpacing: 0.1,
+    textAlign: 'center',
+    anchorX: 'center',
+    anchorY: 'middle',
+    font: './fonts/mplusREGULAR.ttf',
+});
+welcomeTextSCROLL.mesh.position.set(0, 10, -20);
+scene.add(welcomeTextSCROLL.mesh);
+
+
 let mainPaintingGeo = new THREE.PlaneGeometry(4.61*4, 5.57*4);
 let mainPaintingTexture = new THREE.TextureLoader().load('textures/GDR-MAIN.jpg');
 const mainPaintingMat = new THREE.MeshBasicMaterial({map: mainPaintingTexture});
